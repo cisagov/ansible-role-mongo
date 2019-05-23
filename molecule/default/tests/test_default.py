@@ -10,20 +10,41 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts("all")
 
 
-@pytest.mark.parametrize("pkg", ["cyhy-runner"])
+@pytest.mark.parametrize("pkg", ["mongodb-org"])
+def test_packages(host, pkg):
+    """Test that the appropriate packages were installed."""
+    assert host.package(pkg).is_installed
+
+
+@pytest.mark.parametrize("pkg", ["pymongo"])
 def test_pip_packages(host, pkg):
     """Test that the pip packages were installed."""
     assert pkg in host.pip_package.get_packages()
 
 
 @pytest.mark.parametrize(
-    "f",
-    [
-        "/var/local/cyhy/runner",
-        "/var/log/cyhy",
-        "/lib/systemd/system/cyhy-runner.service",
-    ],
+    "file,content", [
+        ("/lib/systemd/system/mongod.service", r"^After=network.target multi-user.target cloud-final.service$"),
+        ("/lib/systemd/system/mongod.service", r"^ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod.conf$"),
+        ("/lib/systemd/system/mongod.service", r"^RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb$"),
+        ("/lib/systemd/system/mongod.service", r"^AssertPathIsMountPoint=/var/lib/mongodb$"),
+        ("/lib/systemd/system/mongod.service", r"^AssertPathIsMountPoint=/var/log/mongodb$"),
+        ("/lib/systemd/system/mongod.service", r"^RuntimeDirectory=mongodb$"),
+        ("/lib/systemd/system/mongod.service", r"^RuntimeDirectoryMode=0744$"),
+    ]
 )
-def test_files(host, f):
-    """Test that the expected files and directories are present."""
-    assert host.file(f).exists
+def test_files_content(host, file, content):
+    """Test that config files were modified as expected."""
+    f = host.file(file)
+
+    assert f.exists
+    assert f.contains(content)
+
+
+# testinfra currently incorrectly identifies the service provider in
+# our Docker containers because of philpep/testinfra#416, so we have
+# to leave this test commented out for now.
+# @pytest.mark.parametrize("svc", ["cyhy-runner"])
+# def test_services(host, svc):
+#     """Test that the services were enabled."""
+#     assert host.service(svc).is_enabled
