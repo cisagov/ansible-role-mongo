@@ -53,71 +53,86 @@
     dest: /lib/systemd/system/mongod.service
     regexp: ^ExecStart=/usr/bin/mongod
     state: present
+    backrefs: yes
     line: "ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod \
     --config /etc/mongod.conf"
+
+- name: Test for RequiresMountsFor line
+  command: grep -c ^RequiresMountsFor= /lib/systemd/system/mongod.service
+  register: test_requiresmountsfor
+  ignore_errors: yes
+  changed_when: false
 
 - name: Make sure all mongo file systems are mounted before starting
   lineinfile:
     dest: /lib/systemd/system/mongod.service
-    firstmatch: yes
-    regexp: "^RequiresMountsFor=/var/lib/mongodb \
-    /var/lib/mongodb/journal /var/log/mongodb"
     insertafter: ^After=
     state: present
     line: "RequiresMountsFor=/var/lib/mongodb \
     /var/lib/mongodb/journal /var/log/mongodb"
+  when: test_requiresmountsfor.rc != 0
 
 # These three lines will disallow mongo from starting up in the event
 # that the mongo data, journal, and/or log volumes are not ready yet.
 # The mongo service will fail to start, and the failed assertion will
 # be mentioned explicitly in the output of the command "systemctl
 # status mongod.service".
+- name: Test for AssertPathIsMountPoint lines
+  command: grep -c ^AssertPathIsMountPoint= /lib/systemd/system/mongod.service
+  register: test_assertpathismountpoint
+  ignore_errors: yes
+  changed_when: false
 - name: Make sure mongo data file system is mounted before starting
   lineinfile:
     dest: /lib/systemd/system/mongod.service
-    firstmatch: yes
-    regexp: ^AssertPathIsMountPoint=/var/lib/mongodb
     insertafter: ^RequiresMountsFor=
     state: present
     line: AssertPathIsMountPoint=/var/lib/mongodb
+  when: test_assertpathismountpoint.rc != 0
 - name: Make sure mongo journal file system is mounted before starting
   lineinfile:
     dest: /lib/systemd/system/mongod.service
-    firstmatch: yes
-    regexp: ^AssertPathIsMountPoint=/var/lib/mongodb/journal
     insertafter: ^RequiresMountsFor=
     state: present
     line: AssertPathIsMountPoint=/var/lib/mongodb/journal
+  when: test_assertpathismountpoint.rc != 0
 - name: Make sure mongo log file system is mounted before starting
   lineinfile:
     dest: /lib/systemd/system/mongod.service
-    firstmatch: yes
-    regexp: ^AssertPathIsMountPoint=/var/log/mongodb
     insertafter: ^RequiresMountsFor=
     state: present
     line: AssertPathIsMountPoint=/var/log/mongodb
+  when: test_assertpathismountpoint.rc != 0
 
-# /run/mongodb (AKA /var/run/mnogodb) is used to store a file
+# /run/mongodb (AKA /var/run/mongodb) is used to store a file
 # containing the mongod pid.  We shouldn't start up until that
-# directory exists and has teh correct permissions.
+# directory exists and has the correct permissions.
+- name: Test for RuntimeDirectory line
+  command: grep -c ^RuntimeDirectory= /lib/systemd/system/mongod.service
+  register: test_runtimedirectory
+  ignore_errors: yes
+  changed_when: false
 - name: Make sure /run/mongodb is created before starting
   lineinfile:
     dest: /lib/systemd/system/mongod.service
-    firstmatch: yes
-    regexp: ^RuntimeDirectory=mongodb
     insertafter: ^Group=mongodb
     state: present
     line: RuntimeDirectory=mongodb
+  when: test_runtimedirectory.rc != 0
+- name: Test for RuntimeDirectoryMode line
+  command: grep -c ^RuntimeDirectoryMode= /lib/systemd/system/mongod.service
+  register: test_runtimedirectorymode
+  ignore_errors: yes
+  changed_when: false
 - name: Make sure /run/mongodb has the correct permissions before starting
   lineinfile:
     dest: /lib/systemd/system/mongod.service
-    firstmatch: yes
-    regexp: ^RuntimeDirectoryMode=0744
     insertafter: ^RuntimeDirectory=mongodb
     state: present
     line: RuntimeDirectoryMode=0744
+  when: test_runtimedirectorymode.rc != 0
 
-# pymongo is needed for ansible mongodb_user module
+# pymongo is needed for ansible mongodb_user Ansible module
 - name: Install pymongo via pip
   pip:
     name: pymongo
