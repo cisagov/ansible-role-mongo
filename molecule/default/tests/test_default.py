@@ -23,15 +23,31 @@ def test_pip_packages(host, pkg):
 
 
 @pytest.mark.parametrize(
-    "file,content", [
-        ("/lib/systemd/system/mongod.service", r"^After=network.target multi-user.target cloud-final.service$"),
-        ("/lib/systemd/system/mongod.service", r"^ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod.conf$"),
-        ("/lib/systemd/system/mongod.service", r"^RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb$"),
-        ("/lib/systemd/system/mongod.service", r"^AssertPathIsMountPoint=/var/lib/mongodb$"),
-        ("/lib/systemd/system/mongod.service", r"^AssertPathIsMountPoint=/var/log/mongodb$"),
+    "file,content",
+    [
+        (
+            "/lib/systemd/system/mongod.service",
+            r"^After=network.target multi-user.target cloud-final.service$",
+        ),
+        (
+            "/lib/systemd/system/mongod.service",
+            r"^ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod.conf$",
+        ),
+        (
+            "/lib/systemd/system/mongod.service",
+            r"^RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb$",
+        ),
+        (
+            "/lib/systemd/system/mongod.service",
+            r"^AssertPathIsMountPoint=/var/lib/mongodb$",
+        ),
+        (
+            "/lib/systemd/system/mongod.service",
+            r"^AssertPathIsMountPoint=/var/log/mongodb$",
+        ),
         ("/lib/systemd/system/mongod.service", r"^RuntimeDirectory=mongodb$"),
         ("/lib/systemd/system/mongod.service", r"^RuntimeDirectoryMode=0744$"),
-    ]
+    ],
 )
 def test_files_content(host, file, content):
     """Test that config files were modified as expected."""
