@@ -5,6 +5,15 @@
     id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
     keyserver: keyserver.ubuntu.com
 
+- name: Install prerequisites so apt can use a repo over HTTPS
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+
 - name: Copy sources list for mongodb-org (official MongoDB package repo)
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d
