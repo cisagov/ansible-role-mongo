@@ -15,8 +15,8 @@ all of which should be in this repository.
 
 If you want to report a bug or request a new feature, the most direct
 method is to [create an
-issue](https://github.com/cisagov/ansible-role-cyhy-mongo/issues) in
-this repository.  We recommend that you first search through existing
+issue](https://github.com/cisagov/ansible-role-mongo/issues) in this
+repository.  We recommend that you first search through existing
 issues (both open and closed) to check if your particular issue has
 already been reported.  If it has then you might want to add a comment
 to the existing issue.  If it hasn't then feel free to create a new
@@ -25,12 +25,12 @@ one.
 ## Pull requests ##
 
 If you choose to [submit a pull
-request](https://github.com/cisagov/ansible-role-cyhy-mongo/pulls),
-you will notice that our continuous integration (CI) system runs a
-fairly extensive set of linters and syntax checkers.  Your pull
-request may fail these checks, and that's OK.  If you want you can
-stop there and wait for us to make the necessary corrections to ensure
-your code passes the CI checks.
+request](https://github.com/cisagov/ansible-role-mongo/pulls), you
+will notice that our continuous integration (CI) system runs a fairly
+extensive set of linters and syntax checkers.  Your pull request may
+fail these checks, and that's OK.  If you want you can stop there and
+wait for us to make the necessary corrections to ensure your code
+passes the CI checks.
 
 If you want to make the changes yourself, or if you want to become a
 regular contributor, then you will want to set up
@@ -46,20 +46,77 @@ There are a few ways to do this, but we prefer to use
 create and manage a Python virtual environment specific to this
 project.
 
+If you already have `pyenv` and `pyenv-virtualenv` configured you can
+take advantage of the `setup-env` tool in this repo to automate the
+entire environment configuration process.
+
+```console
+./setup-env
+```
+
+Otherwise, follow the steps below to manually configure your
+environment.
+
 #### Installing and using `pyenv` and `pyenv-virtualenv` ####
 
-On the Mac, installation is as simple as `brew install pyenv
-pyenv-virtualenv` and adding this to your profile:
+On the Mac, we recommend installing [brew](https://brew.sh/).  Then
+installation is as simple as `brew install pyenv pyenv-virtualenv` and
+adding this to your profile:
+
+```bash
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+```
+
+For Linux, Windows Subsystem for Linux (WSL), or on the Mac (if you
+don't want to use `brew`) you can use
+[pyenv/pyenv-installer](https://github.com/pyenv/pyenv-installer) to
+install the necessary tools. Before running this ensure that you have
+installed the prerequisites for your platform according to the
+[`pyenv` wiki
+page](https://github.com/pyenv/pyenv/wiki/common-build-problems).
+
+On WSL you should treat your platform as whatever Linux distribution
+you've chosen to install.
+
+Once you have installed `pyenv` you will need to add the following
+lines to your `.bash_profile` (or `.profile`):
+
+```bash
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+```
+
+and then add the following lines to your `.bashrc`:
 
 ```bash
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```
 
-For Linux (or on the Mac, if you don't want to use `brew`) you can use
-[pyenv/pyenv-installer](https://github.com/pyenv/pyenv-installer) to
-install the necessary tools.  When you are finished you will need to
-add the same two lines above to your profile.
+If you want more information about setting up `pyenv` once installed, please run
+
+```console
+pyenv init
+```
+
+and
+
+```console
+pyenv virtualenv-init
+```
+
+for the current configuration instructions.
+
+If you are using a shell other than `bash` you should follow the
+instructions that the `pyenv-installer` script outputs.
+
+You will need to reload your shell for these changes to take effect so
+you can begin to use `pyenv`.
 
 For a list of Python versions that are already installed and ready to
 use with `pyenv`, use the command `pyenv versions`.  To see a list of
@@ -78,10 +135,10 @@ can create and configure the Python virtual environment with these
 commands:
 
 ```console
-cd ansible-role-cyhy-mongo
-pyenv virtualenv <python_version_to_use> ansible-role-cyhy-mongo
-pyenv local ansible-role-cyhy-mongo
-pip install -r requirements-dev.txt
+cd ansible-role-mongo
+pyenv virtualenv <python_version_to_use> ansible-role-mongo
+pyenv local ansible-role-mongo
+pip install --requirement requirements-dev.txt
 ```
 
 #### Installing the pre-commit hook ####
