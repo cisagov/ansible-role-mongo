@@ -91,26 +91,26 @@
   changed_when: false
   ignore_errors: yes
   register: test_assertpathismountpoint
-- name: Make sure mongo data file system is mounted before starting
-  ansible.builtin.lineinfile:
-    dest: /lib/systemd/system/mongod.service
-    insertafter: ^RequiresMountsFor=
-    line: AssertPathIsMountPoint=/var/lib/mongodb
-    state: present
-  when: test_assertpathismountpoint.rc != 0
-- name: Make sure mongo journal file system is mounted before starting
-  ansible.builtin.lineinfile:
-    dest: /lib/systemd/system/mongod.service
-    insertafter: ^RequiresMountsFor=
-    line: AssertPathIsMountPoint=/var/lib/mongodb/journal
-    state: present
-  when: test_assertpathismountpoint.rc != 0
-- name: Make sure mongo log file system is mounted before starting
-  ansible.builtin.lineinfile:
-    dest: /lib/systemd/system/mongod.service
-    insertafter: ^RequiresMountsFor=
-    line: AssertPathIsMountPoint=/var/log/mongodb
-    state: present
+- name: Make sure mongo file systems are mounted before starting
+  block:
+    - name: Make sure mongo data file system is mounted before starting
+      ansible.builtin.lineinfile:
+        dest: /lib/systemd/system/mongod.service
+        insertafter: ^RequiresMountsFor=
+        line: AssertPathIsMountPoint=/var/lib/mongodb
+        state: present
+    - name: Make sure mongo journal file system is mounted before starting
+      ansible.builtin.lineinfile:
+        dest: /lib/systemd/system/mongod.service
+        insertafter: ^RequiresMountsFor=
+        line: AssertPathIsMountPoint=/var/lib/mongodb/journal
+        state: present
+    - name: Make sure mongo log file system is mounted before starting
+      ansible.builtin.lineinfile:
+        dest: /lib/systemd/system/mongod.service
+        insertafter: ^RequiresMountsFor=
+        line: AssertPathIsMountPoint=/var/log/mongodb
+        state: present
   when: test_assertpathismountpoint.rc != 0
 
 # /run/mongodb (AKA /var/run/mongodb) is used to store a file
