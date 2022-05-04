@@ -1,36 +1,45 @@
 ---
 # tasks file for mongo
 - name: Get mongodb-org GPG key
-  apt_key:
-    keyserver: keyserver.ubuntu.com
+  ansible.builtin.apt_key:
     id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+    keyserver: keyserver.ubuntu.com
+
+- name: Install prerequisites so apt can use a repo over HTTPS
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
 
 - name: Copy sources list for mongodb-org (official MongoDB package repo)
-  copy:
-    src: mongodb-org-3.6.list
+  ansible.builtin.copy:
     dest: /etc/apt/sources.list.d
     mode: 0644
+    src: mongodb-org-3.6.list
 
 - name: Update the cache with the mongodb-org goodness
-  package:
+  ansible.builtin.package:
     update_cache: yes
 
 - name: Install mongo
-  package:
-    name: mongodb-org=3.6.8
+  ansible.builtin.package:
+    name: mongodb-org=3.6.23
 
 # Unless you do this, systemd can sometimes get confused when you try
 # to start a service you just installed
 - name: Systemd daemon-reload
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
   when:
     - ansible_service_mgr == "systemd"
 
 - name: Enable mongo
-  service:
-    name: mongod
+  ansible.builtin.service:
     enabled: yes
+    name: mongod
 
 # We want the mongo service to be started very late in the boot
 # process.  This is because cloud-init may have to format the mongo
@@ -40,36 +49,36 @@
 # cloud-final.service here should ensure that cloud-init is finished
 # running before this service is started.
 - name: Configure mongo service to run after multi-user and cloud-final
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /lib/systemd/system/mongod.service
+    line: After=network.target multi-user.target cloud-final.service
     regexp: ^After=
     state: present
-    line: After=network.target multi-user.target cloud-final.service
 
 # Mongo docs recommend running via numactl on NUMA hosts
 # https://docs.mongodb.com/manual/administration/production-notes/#mongodb-and-numa-hardware
 - name: Start mongod via numactl
-  lineinfile:
-    dest: /lib/systemd/system/mongod.service
-    regexp: ^ExecStart=/usr/bin/mongod
-    state: present
+  ansible.builtin.lineinfile:
     backrefs: yes
+    dest: /lib/systemd/system/mongod.service
     line: "ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod \
     --config /etc/mongod.conf"
+    regexp: ^ExecStart=/usr/bin/mongod
+    state: present
 
 - name: Test for RequiresMountsFor line
-  command: grep -c ^RequiresMountsFor= /lib/systemd/system/mongod.service
-  register: test_requiresmountsfor
-  ignore_errors: yes
+  ansible.builtin.command: grep -c ^RequiresMountsFor= /lib/systemd/system/mongod.service
   changed_when: false
+  ignore_errors: yes
+  register: test_requiresmountsfor
 
 - name: Make sure all mongo file systems are mounted before starting
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /lib/systemd/system/mongod.service
     insertafter: ^After=
-    state: present
     line: "RequiresMountsFor=/var/lib/mongodb \
     /var/lib/mongodb/journal /var/log/mongodb"
+    state: present
   when: test_requiresmountsfor.rc != 0
 
 # These three lines will disallow mongo from starting up in the event
@@ -78,61 +87,61 @@
 # be mentioned explicitly in the output of the command "systemctl
 # status mongod.service".
 - name: Test for AssertPathIsMountPoint lines
-  command: grep -c ^AssertPathIsMountPoint= /lib/systemd/system/mongod.service
-  register: test_assertpathismountpoint
-  ignore_errors: yes
+  ansible.builtin.command: grep -c ^AssertPathIsMountPoint= /lib/systemd/system/mongod.service
   changed_when: false
-- name: Make sure mongo data file system is mounted before starting
-  lineinfile:
-    dest: /lib/systemd/system/mongod.service
-    insertafter: ^RequiresMountsFor=
-    state: present
-    line: AssertPathIsMountPoint=/var/lib/mongodb
-  when: test_assertpathismountpoint.rc != 0
-- name: Make sure mongo journal file system is mounted before starting
-  lineinfile:
-    dest: /lib/systemd/system/mongod.service
-    insertafter: ^RequiresMountsFor=
-    state: present
-    line: AssertPathIsMountPoint=/var/lib/mongodb/journal
-  when: test_assertpathismountpoint.rc != 0
-- name: Make sure mongo log file system is mounted before starting
-  lineinfile:
-    dest: /lib/systemd/system/mongod.service
-    insertafter: ^RequiresMountsFor=
-    state: present
-    line: AssertPathIsMountPoint=/var/log/mongodb
+  ignore_errors: yes
+  register: test_assertpathismountpoint
+- name: Make sure mongo file systems are mounted before starting
+  block:
+    - name: Make sure mongo data file system is mounted before starting
+      ansible.builtin.lineinfile:
+        dest: /lib/systemd/system/mongod.service
+        insertafter: ^RequiresMountsFor=
+        line: AssertPathIsMountPoint=/var/lib/mongodb
+        state: present
+    - name: Make sure mongo journal file system is mounted before starting
+      ansible.builtin.lineinfile:
+        dest: /lib/systemd/system/mongod.service
+        insertafter: ^RequiresMountsFor=
+        line: AssertPathIsMountPoint=/var/lib/mongodb/journal
+        state: present
+    - name: Make sure mongo log file system is mounted before starting
+      ansible.builtin.lineinfile:
+        dest: /lib/systemd/system/mongod.service
+        insertafter: ^RequiresMountsFor=
+        line: AssertPathIsMountPoint=/var/log/mongodb
+        state: present
   when: test_assertpathismountpoint.rc != 0
 
 # /run/mongodb (AKA /var/run/mongodb) is used to store a file
 # containing the mongod pid.  We shouldn't start up until that
 # directory exists and has the correct permissions.
 - name: Test for RuntimeDirectory line
-  command: grep -c ^RuntimeDirectory= /lib/systemd/system/mongod.service
-  register: test_runtimedirectory
-  ignore_errors: yes
+  ansible.builtin.command: grep -c ^RuntimeDirectory= /lib/systemd/system/mongod.service
   changed_when: false
+  ignore_errors: yes
+  register: test_runtimedirectory
 - name: Make sure /run/mongodb is created before starting
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /lib/systemd/system/mongod.service
     insertafter: ^Group=mongodb
-    state: present
     line: RuntimeDirectory=mongodb
+    state: present
   when: test_runtimedirectory.rc != 0
 - name: Test for RuntimeDirectoryMode line
-  command: grep -c ^RuntimeDirectoryMode= /lib/systemd/system/mongod.service
-  register: test_runtimedirectorymode
-  ignore_errors: yes
+  ansible.builtin.command: grep -c ^RuntimeDirectoryMode= /lib/systemd/system/mongod.service
   changed_when: false
+  ignore_errors: yes
+  register: test_runtimedirectorymode
 - name: Make sure /run/mongodb has the correct permissions before starting
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /lib/systemd/system/mongod.service
     insertafter: ^RuntimeDirectory=mongodb
-    state: present
     line: RuntimeDirectoryMode=0744
+    state: present
   when: test_runtimedirectorymode.rc != 0
 
-# pymongo is needed for ansible mongodb_user Ansible module
+# pymongo is needed for the mongodb_user Ansible module
 - name: Install pymongo via pip
-  pip:
+  ansible.builtin.pip:
     name: pymongo

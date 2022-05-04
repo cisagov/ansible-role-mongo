@@ -1,8 +1,8 @@
-# ansible-role-cyhy-mongo #
+# ansible-role-mongo #
 
-[![Build Status](https://travis-ci.com/cisagov/ansible-role-cyhy-mongo.svg?branch=develop)](https://travis-ci.com/cisagov/ansible-role-cyhy-mongo)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/cisagov/ansible-role-cyhy-mongo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cisagov/ansible-role-cyhy-mongo/alerts/)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/cisagov/ansible-role-cyhy-mongo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cisagov/ansible-role-cyhy-mongo/context:python)
+[![GitHub Build Status](https://github.com/cisagov/ansible-role-mongo/workflows/build/badge.svg)](https://github.com/cisagov/ansible-role-mongo/actions)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/cisagov/ansible-role-mongo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cisagov/ansible-role-mongo/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/cisagov/ansible-role-mongo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cisagov/ansible-role-mongo/context:python)
 
 An Ansible role for installing [MongoDB](https://www.mongodb.com/).
 
@@ -14,9 +14,19 @@ None.
 
 None.
 
+<!--
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| optional_variable | Describe its purpose. | `default_value` | No |
+| required_variable | Describe its purpose. | n/a | Yes |
+-->
+
 ## Dependencies ##
 
-None.
+- [cisagov/ansible-role-disable-numa](https://github.com/cisagov/ansible-role-disable-numa)
+- [GekoCloud/ansible-role-disable-thp](https://github.com/GekoCloud/ansible-role-disable-thp)
+- [cisagov/ansible-role-numactl](https://github.com/cisagov/ansible-role-numactl)
+- [cisagov/ansible-role-pip](https://github.com/cisagov/ansible-role-pip)
 
 ## Example Playbook ##
 
@@ -32,7 +42,7 @@ Here's how to use it in a playbook:
 
 ## Contributing ##
 
-We welcome contributions!  Please see [here](CONTRIBUTING.md) for
+We welcome contributions!  Please see [`CONTRIBUTING.md`](CONTRIBUTING.md) for
 details.
 
 ## License ##
