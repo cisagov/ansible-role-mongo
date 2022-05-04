@@ -141,7 +141,7 @@
     state: present
   when: test_runtimedirectorymode.rc != 0
 
-# pymongo is needed for ansible mongodb_user Ansible module
+# pymongo is needed for the mongodb_user Ansible module
 - name: Install pymongo via pip
   ansible.builtin.pip:
     name: pymongo
