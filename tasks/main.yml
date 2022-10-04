@@ -144,4 +144,5 @@
 # pymongo is needed for the mongodb_user Ansible module
 - name: Install pymongo via pip
   ansible.builtin.pip:
+    executable: /usr/bin/pip2
     name: pymongo
