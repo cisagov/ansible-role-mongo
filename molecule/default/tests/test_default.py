@@ -19,9 +19,15 @@ def test_packages(host, pkg):
 
 
 @pytest.mark.parametrize("pkg", ["pymongo"])
-def test_pip_packages(host, pkg):
-    """Test that the pip packages were installed."""
-    assert pkg in host.pip_package.get_packages()
+def test_pip2_packages(host, pkg):
+    """Test that the pip2 packages were installed."""
+    assert pkg in host.pip.get_packages(pip_path="/usr/bin/pip2")
+
+
+@pytest.mark.parametrize("pkg", ["pymongo"])
+def test_pip3_packages(host, pkg):
+    """Test that the pip3 packages were installed."""
+    assert pkg in host.pip.get_packages(pip_path="/usr/bin/pip3")
 
 
 @pytest.mark.parametrize(

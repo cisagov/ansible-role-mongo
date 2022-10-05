@@ -142,6 +142,10 @@
   when: test_runtimedirectorymode.rc != 0
 
 # pymongo is needed for the mongodb_user Ansible module
-- name: Install pymongo via pip
+- name: Install pymongo via pip2 and pip3
   ansible.builtin.pip:
+    executable: "{{ item }}"
     name: pymongo
+  loop:
+    - /usr/bin/pip2
+    - /usr/bin/pip3
