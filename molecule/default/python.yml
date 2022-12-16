@@ -1,11 +1,15 @@
 ---
 - hosts: all
-  name: Install python2/python3 and pip2/pip3
+  name: Install python2 and pip2
   become: yes
   become_method: sudo
-  roles:
-    - pip
-    - python
+  tasks:
+    - name: Install python
+      ansible.builtin.include_role:
+        name: python
+    - name: Install pip
+      ansible.builtin.include_role:
+        name: pip
   vars:
     install_pip2: true
     install_python2: true
