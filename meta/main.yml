@@ -54,3 +54,5 @@ dependencies:
     name: numactl
   - src: https://github.com/cisagov/ansible-role-pip
     name: pip
+    vars:
+      install_pip2: true
