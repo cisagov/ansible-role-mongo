@@ -13,5 +13,7 @@
   name: numactl
 - src: https://github.com/cisagov/ansible-role-pip
   name: pip
+- src: https://github.com/cisagov/ansible-role-python
+  name: python
 - src: https://github.com/cisagov/ansible-role-upgrade
   name: upgrade

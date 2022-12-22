@@ -26,6 +26,7 @@ None.
 - [GekoCloud/ansible-role-disable-thp](https://github.com/GekoCloud/ansible-role-disable-thp)
 - [cisagov/ansible-role-numactl](https://github.com/cisagov/ansible-role-numactl)
 - [cisagov/ansible-role-pip](https://github.com/cisagov/ansible-role-pip)
+- [cisagov/ansible-role-python](https://github.com/cisagov/ansible-role-python)
 
 ## Example Playbook ##
 
