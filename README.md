@@ -1,8 +1,7 @@
 # ansible-role-mongo #
 
 [![GitHub Build Status](https://github.com/cisagov/ansible-role-mongo/workflows/build/badge.svg)](https://github.com/cisagov/ansible-role-mongo/actions)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/cisagov/ansible-role-mongo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cisagov/ansible-role-mongo/alerts/)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/cisagov/ansible-role-mongo.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cisagov/ansible-role-mongo/context:python)
+[![CodeQL](https://github.com/cisagov/ansible-role-mongo/workflows/CodeQL/badge.svg)](https://github.com/cisagov/ansible-role-mongo/actions/workflows/codeql-analysis.yml)
 
 An Ansible role for installing [MongoDB](https://www.mongodb.com/).
 
@@ -27,6 +26,7 @@ None.
 - [GekoCloud/ansible-role-disable-thp](https://github.com/GekoCloud/ansible-role-disable-thp)
 - [cisagov/ansible-role-numactl](https://github.com/cisagov/ansible-role-numactl)
 - [cisagov/ansible-role-pip](https://github.com/cisagov/ansible-role-pip)
+- [cisagov/ansible-role-python](https://github.com/cisagov/ansible-role-python)
 
 ## Example Playbook ##
 
@@ -36,8 +36,10 @@ Here's how to use it in a playbook:
 - hosts: all
   become: yes
   become_method: sudo
-  roles:
-    - mongo
+  tasks:
+    - name: Install MongoDB
+      ansible.builtin.include_role:
+        name: mongo
 ```
 
 ## Contributing ##
