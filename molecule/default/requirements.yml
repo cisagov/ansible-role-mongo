@@ -7,8 +7,6 @@
 # https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
 - src: https://github.com/GekoCloud/ansible-role-disable-thp
   name: disable_thp
-  vars:
-    disable_thp_before_service: mongod
 - src: https://github.com/cisagov/ansible-role-numactl
   name: numactl
 - src: https://github.com/cisagov/ansible-role-pip

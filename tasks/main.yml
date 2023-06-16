@@ -1,10 +1,4 @@
 ---
-# tasks file for mongo
-- name: Get mongodb-org GPG key
-  ansible.builtin.apt_key:
-    id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-    keyserver: keyserver.ubuntu.com
-
 - name: Install prerequisites so apt can use a repo over HTTPS
   ansible.builtin.package:
     name:
@@ -13,6 +7,11 @@
       - curl
       - gnupg2
       - software-properties-common
+
+- name: Get mongodb-org GPG key
+  ansible.builtin.apt_key:
+    id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+    keyserver: keyserver.ubuntu.com
 
 - name: Copy sources list for mongodb-org (official MongoDB package repo)
   ansible.builtin.copy:
@@ -92,6 +91,7 @@
   ignore_errors: yes
   register: test_assertpathismountpoint
 - name: Make sure mongo file systems are mounted before starting
+  when: test_assertpathismountpoint.rc != 0
   block:
     - name: Make sure mongo data file system is mounted before starting
       ansible.builtin.lineinfile:
@@ -111,7 +111,6 @@
         insertafter: ^RequiresMountsFor=
         line: AssertPathIsMountPoint=/var/log/mongodb
         state: present
-  when: test_assertpathismountpoint.rc != 0
 
 # /run/mongodb (AKA /var/run/mongodb) is used to store a file
 # containing the mongod pid.  We shouldn't start up until that
