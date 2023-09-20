@@ -1,4 +1,9 @@
 ---
+# Note that dependencies listed here are automatically installed
+# before this role.  Role variables for any roles listed here can be
+# assigned static variables.
+#
+# See also cisagov/skeleton-ansible-role#153.
 dependencies:
   # Disable NUMA for MongoDB:
   # https://docs.mongodb.com/v3.2/administration/production-notes/#mongodb-and-numa-hardware
@@ -56,3 +61,4 @@ galaxy_info:
     #     - focal
     #     - jammy
   role_name: mongo
+  standalone: true
