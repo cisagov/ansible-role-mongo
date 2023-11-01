@@ -1,17 +1,17 @@
 ---
 # Disable NUMA for MongoDB:
 # https://docs.mongodb.com/v3.2/administration/production-notes/#mongodb-and-numa-hardware
-- src: https://github.com/cisagov/ansible-role-disable-numa
-  name: disable_numa
+- name: disable_numa
+  src: https://github.com/cisagov/ansible-role-disable-numa
 # MongoDB doesn't like transparent huge pages:
 # https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
-- src: https://github.com/GekoCloud/ansible-role-disable-thp
-  name: disable_thp
-- src: https://github.com/cisagov/ansible-role-numactl
-  name: numactl
-- src: https://github.com/cisagov/ansible-role-pip
-  name: pip
-- src: https://github.com/cisagov/ansible-role-python
-  name: python
-- src: https://github.com/cisagov/ansible-role-upgrade
-  name: upgrade
+- name: disable_thp
+  src: https://github.com/GekoCloud/ansible-role-disable-thp
+- name: numactl
+  src: https://github.com/cisagov/ansible-role-numactl
+- name: pip
+  src: https://github.com/cisagov/ansible-role-pip
+- name: python
+  src: https://github.com/cisagov/ansible-role-python
+- name: upgrade
+  src: https://github.com/cisagov/ansible-role-upgrade
