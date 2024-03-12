@@ -1,10 +1,10 @@
 ---
 - name: Ensure that a supported version of MongoDB is provided
   ansible.builtin.assert:
-    msg: "You must provide a valid MongoDB version (3.6)"
+    msg: "You must provide a valid MongoDB version (3.6 or 4.0)"
     that:
       - mongo_mongodb_version is defined
-      - mongo_mongodb_version in ["3.6"]
+      - mongo_mongodb_version in ["3.6", "4.0"]
 
 - name: Include variables for the specified version of MongoDB
   ansible.builtin.include_vars: "{{ mongo_mongodb_version }}.yml"
