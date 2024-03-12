@@ -1,0 +1,3 @@
+---
+# Default version of MongoDB to install
+mongo_mongodb_version: "3.6"

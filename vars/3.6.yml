@@ -1,0 +1,10 @@
+---
+# This is the base URL that will have a deb file appended to it for installation
+mongo_mongodb_deb_base_url: https://repo.mongodb.org/apt/debian/dists/stretch/mongodb-org/3.6/main/binary-amd64/
+
+# List of deb files that will be installed
+mongo_mongodb_deb_files:
+  - mongodb-org-mongos_3.6.23_amd64.deb
+  - mongodb-org-server_3.6.23_amd64.deb
+  - mongodb-org-shell_3.6.23_amd64.deb
+  - mongodb-org-tools_3.6.23_amd64.deb
