@@ -11,10 +11,11 @@ dependencies:
     name: disable_numa
   # MongoDB doesn't like transparent huge pages:
   # https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
-  - src: https://github.com/GekoCloud/ansible-role-disable-thp
+  - src: https://github.com/mcdonnnj/ansible-role-disable-thp
     name: disable_thp
     vars:
       disable_thp_before_service: mongod
+    version: improvement/conform_role_to_ansible-lint_rules
   - src: https://github.com/cisagov/ansible-role-numactl
     name: numactl
   - src: https://github.com/cisagov/ansible-role-pip
