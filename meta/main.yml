@@ -46,6 +46,7 @@ galaxy_info:
     #     - "2023"
     - name: Debian
       versions:
+<<<<<<< HEAD
          - buster
     #     - bullseye
     #     - bookworm
@@ -61,4 +62,22 @@ galaxy_info:
     #     - focal
     #     - jammy
   role_name: mongo
+=======
+        - buster
+        - bullseye
+        - bookworm
+        - trixie
+    - name: Fedora
+      versions:
+        - "38"
+        - "39"
+    - name: Kali
+      versions:
+        - "2023"
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+  role_name: skeleton
+>>>>>>> c121f6c2d751ea234695e5ff5188c9a834537efd
   standalone: true
