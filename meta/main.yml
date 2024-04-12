@@ -46,13 +46,14 @@ galaxy_info:
     #     - "2023"
     - name: Debian
       versions:
-         - buster
+        - buster
     #     - bullseye
     #     - bookworm
+    #     - trixie
     # - name: Fedora
     #   versions:
-    #     - "37"
     #     - "38"
+    #     - "39"
     # - name: Kali
     #   versions:
     #     - "2023"
