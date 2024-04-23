@@ -5,8 +5,9 @@
   src: https://github.com/cisagov/ansible-role-disable-numa
 # MongoDB doesn't like transparent huge pages:
 # https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
-- name: disable_thp
-  src: https://github.com/GekoCloud/ansible-role-disable-thp
+- name: manage_thp
+  src: https://github.com/cisagov/ansible-role-manage-thp
+  version: first-commits
 - name: numactl
   src: https://github.com/cisagov/ansible-role-numactl
 - name: pip
