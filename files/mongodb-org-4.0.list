@@ -1,1 +1,1 @@
-deb https://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main
+deb [trusted=yes] https://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main
