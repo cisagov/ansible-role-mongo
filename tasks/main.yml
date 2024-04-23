@@ -21,7 +21,7 @@
 
 - name: Update the cache with the mongodb-org goodness
   ansible.builtin.package:
-    update_cache: yes
+    update_cache: true
 
 - name: Install mongo
   ansible.builtin.package:
@@ -37,7 +37,7 @@
 
 - name: Enable mongo
   ansible.builtin.service:
-    enabled: yes
+    enabled: true
     name: mongod
 
 # We want the mongo service to be started very late in the boot
@@ -58,7 +58,7 @@
 # https://docs.mongodb.com/manual/administration/production-notes/#mongodb-and-numa-hardware
 - name: Start mongod via numactl
   ansible.builtin.lineinfile:
-    backrefs: yes
+    backrefs: true
     dest: /lib/systemd/system/mongod.service
     line: "ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod \
     --config /etc/mongod.conf"
@@ -68,7 +68,7 @@
 - name: Test for RequiresMountsFor line
   ansible.builtin.command: grep -c ^RequiresMountsFor= /lib/systemd/system/mongod.service
   changed_when: false
-  ignore_errors: yes
+  ignore_errors: true
   register: test_requiresmountsfor
 
 - name: Make sure all mongo file systems are mounted before starting
@@ -88,7 +88,7 @@
 - name: Test for AssertPathIsMountPoint lines
   ansible.builtin.command: grep -c ^AssertPathIsMountPoint= /lib/systemd/system/mongod.service
   changed_when: false
-  ignore_errors: yes
+  ignore_errors: true
   register: test_assertpathismountpoint
 - name: Make sure mongo file systems are mounted before starting
   when: test_assertpathismountpoint.rc != 0
@@ -118,7 +118,7 @@
 - name: Test for RuntimeDirectory line
   ansible.builtin.command: grep -c ^RuntimeDirectory= /lib/systemd/system/mongod.service
   changed_when: false
-  ignore_errors: yes
+  ignore_errors: true
   register: test_runtimedirectory
 - name: Make sure /run/mongodb is created before starting
   ansible.builtin.lineinfile:
@@ -130,7 +130,7 @@
 - name: Test for RuntimeDirectoryMode line
   ansible.builtin.command: grep -c ^RuntimeDirectoryMode= /lib/systemd/system/mongod.service
   changed_when: false
-  ignore_errors: yes
+  ignore_errors: true
   register: test_runtimedirectorymode
 - name: Make sure /run/mongodb has the correct permissions before starting
   ansible.builtin.lineinfile:
