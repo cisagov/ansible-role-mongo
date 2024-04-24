@@ -15,7 +15,9 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 @pytest.mark.parametrize("pkg", ["mongodb-org"])
 def test_packages(host, pkg):
     """Test that the appropriate packages were installed."""
-    assert host.package(pkg).is_installed
+    p = host.package(pkg)
+    assert p.is_installed
+    assert p.version.startswith("3.6.23")
 
 
 @pytest.mark.parametrize("pkg", ["pymongo"])
