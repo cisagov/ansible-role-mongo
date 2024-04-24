@@ -15,6 +15,11 @@
 #     id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
 #     keyserver: keyserver.ubuntu.com
 
+# TODO - Since the repo GPG key is expired, instead of trusting the
+# package repo we should instead download the package and store it in
+# S3.  This avoids the attack vector whereby a nefarious agent swaps
+# out the package at https://repo.mongodb.org/apt/debian for a
+# compromised one.  See #26 for more details.
 - name: Add Apt package repo for mongodb-org (official MongoDB package repo)
   ansible.builtin.apt_repository:
     filename: mongodb
