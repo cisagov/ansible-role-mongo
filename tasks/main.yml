@@ -22,13 +22,6 @@
       deb [trusted=yes] https://repo.mongodb.org/apt/debian
       stretch/mongodb-org/{{ version }} main
 
-- name: Update the cache with the mongodb-org goodness
-  ansible.builtin.package:
-    update_cache: true
-  tags:
-    # This task cannot be idempotent.
-    - molecule-idempotence-notest
-
 - name: Install mongo
   ansible.builtin.package:
     name: mongodb-org
