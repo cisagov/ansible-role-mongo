@@ -16,7 +16,6 @@ dependencies:
     vars:
       manage_thp_enabled_setting: never
       manage_thp_start_before_service: mongod
-    version: first-commits
   - src: https://github.com/cisagov/ansible-role-numactl
     name: numactl
   - src: https://github.com/cisagov/ansible-role-pip

@@ -7,7 +7,6 @@
 # https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
 - name: manage_thp
   src: https://github.com/cisagov/ansible-role-manage-thp
-  version: first-commits
 - name: numactl
   src: https://github.com/cisagov/ansible-role-numactl
 - name: pip
