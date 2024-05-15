@@ -11,19 +11,14 @@ None.
 
 ## Role Variables ##
 
-None.
-
-<!--
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
-| optional_variable | Describe its purpose. | `default_value` | No |
-| required_variable | Describe its purpose. | n/a | Yes |
--->
+| version | Version of MongoDB to install. | `3.6` | No |
 
 ## Dependencies ##
 
 - [cisagov/ansible-role-disable-numa](https://github.com/cisagov/ansible-role-disable-numa)
-- [GekoCloud/ansible-role-disable-thp](https://github.com/GekoCloud/ansible-role-disable-thp)
+- [cisagov/ansible-role-manage-thp](https://github.com/cisagov/ansible-role-manage-thp)
 - [cisagov/ansible-role-numactl](https://github.com/cisagov/ansible-role-numactl)
 - [cisagov/ansible-role-pip](https://github.com/cisagov/ansible-role-pip)
 - [cisagov/ansible-role-python](https://github.com/cisagov/ansible-role-python)

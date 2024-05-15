@@ -8,24 +8,28 @@
       - gnupg2
       - software-properties-common
 
-- name: Get mongodb-org GPG key
-  ansible.builtin.apt_key:
-    id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-    keyserver: keyserver.ubuntu.com
+# I'd love to do this, but the GPG key we're interested in expired in
+# December of 2023 and therefore fails to import.
+# - name: Get mongodb-org GPG key
+#   ansible.builtin.apt_key:
+#     id: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+#     keyserver: keyserver.ubuntu.com
 
-- name: Copy sources list for mongodb-org (official MongoDB package repo)
-  ansible.builtin.copy:
-    dest: /etc/apt/sources.list.d
-    mode: 0644
-    src: mongodb-org-3.6.list
-
-- name: Update the cache with the mongodb-org goodness
-  ansible.builtin.package:
-    update_cache: true
+# TODO - Since the repo GPG key is expired, instead of trusting the
+# package repo we should instead download the package and store it in
+# S3.  This avoids the attack vector whereby a nefarious agent swaps
+# out the package at https://repo.mongodb.org/apt/debian for a
+# compromised one.  See #26 for more details.
+- name: Add Apt package repo for mongodb-org (official MongoDB package repo)
+  ansible.builtin.apt_repository:
+    filename: mongodb
+    repo: >
+      deb [trusted=yes] https://repo.mongodb.org/apt/debian
+      stretch/mongodb-org/{{ version }} main
 
 - name: Install mongo
   ansible.builtin.package:
-    name: mongodb-org=3.6.23
+    name: mongodb-org
 
 # Unless you do this, systemd can sometimes get confused when you try
 # to start a service you just installed

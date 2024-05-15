@@ -1,0 +1,4 @@
+---
+# The version of MongoDB to install.  Valid values are 3.2, 3.4, 3.6,
+# and 4.0.
+version: 3.6
