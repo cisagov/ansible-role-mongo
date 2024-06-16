@@ -1,17 +1,25 @@
 ---
-# Disable NUMA for MongoDB:
-# https://docs.mongodb.com/v3.2/administration/production-notes/#mongodb-and-numa-hardware
-- name: disable_numa
-  src: https://github.com/cisagov/ansible-role-disable-numa
-# MongoDB doesn't like transparent huge pages:
-# https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
-- name: manage_thp
-  src: https://github.com/cisagov/ansible-role-manage-thp
-- name: numactl
-  src: https://github.com/cisagov/ansible-role-numactl
-- name: pip
-  src: https://github.com/cisagov/ansible-role-pip
-- name: python
-  src: https://github.com/cisagov/ansible-role-python
-- name: upgrade
-  src: https://github.com/cisagov/ansible-role-upgrade
+# This is necessary to ensure a version of this collection that is compatible
+# with version 2.32.0+ of the Python requests library. This should be removed when
+# it is no longer required per https://github.com/cisagov/skeleton-ansible-role/issues/195
+collections:
+  - name: community.docker
+    version: ">=3.10.2"
+
+roles:
+  # Disable NUMA for MongoDB:
+  # https://docs.mongodb.com/v3.2/administration/production-notes/#mongodb-and-numa-hardware
+  - name: disable_numa
+    src: https://github.com/cisagov/ansible-role-disable-numa
+  # MongoDB doesn't like transparent huge pages:
+  # https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/
+  - name: manage_thp
+    src: https://github.com/cisagov/ansible-role-manage-thp
+  - name: numactl
+    src: https://github.com/cisagov/ansible-role-numactl
+  - name: pip
+    src: https://github.com/cisagov/ansible-role-pip
+  - name: python
+    src: https://github.com/cisagov/ansible-role-python
+  - name: upgrade
+    src: https://github.com/cisagov/ansible-role-upgrade
