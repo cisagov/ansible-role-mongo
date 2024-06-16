@@ -179,7 +179,9 @@ jobs:
       matrix:
         architecture:
           - amd64
-          - arm64
+          # MongoDB did not support ARM64 until version 4.4, whereas
+          # we install version 3.6 by default.
+          # - arm64
         platform:
           # This role only supports Debian Buster
           # - amazonlinux2023-systemd
