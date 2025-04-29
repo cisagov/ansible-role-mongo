@@ -64,8 +64,9 @@
   ansible.builtin.lineinfile:
     backrefs: true
     dest: /lib/systemd/system/mongod.service
-    line: "ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod \
-    --config /etc/mongod.conf"
+    line: >-
+      ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod
+      --config /etc/mongod.conf
     regexp: ^ExecStart=/usr/bin/mongod
     state: present
 
@@ -79,8 +80,9 @@
   ansible.builtin.lineinfile:
     dest: /lib/systemd/system/mongod.service
     insertafter: ^After=
-    line: "RequiresMountsFor=/var/lib/mongodb \
-    /var/lib/mongodb/journal /var/log/mongodb"
+    line: >-
+      RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal
+      /var/log/mongodb
     state: present
   when: test_requiresmountsfor.rc != 0
 
