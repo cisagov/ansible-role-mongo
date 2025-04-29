@@ -13,6 +13,7 @@ None.
 
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
+| mongo_dropin_unit_file | The location of the mongod drop-in unit file that will be created. | `/etc/systemd/mongod.service.d/mongod.conf` | No |
 | version | Version of MongoDB to install. | `3.6` | No |
 
 ## Dependencies ##
