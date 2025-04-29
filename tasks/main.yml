@@ -25,7 +25,7 @@
     filename: mongodb
     repo: >
       deb [trusted=yes] https://repo.mongodb.org/apt/debian
-      stretch/mongodb-org/{{ version }} main
+      stretch/mongodb-org/{{ mongo_version }} main
 
 - name: Install mongo
   ansible.builtin.package:
