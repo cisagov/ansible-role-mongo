@@ -64,13 +64,15 @@
   ansible.builtin.lineinfile:
     backrefs: true
     dest: /lib/systemd/system/mongod.service
-    line: "ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod \
-    --config /etc/mongod.conf"
+    line: >-
+      ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod
+      --config /etc/mongod.conf
     regexp: ^ExecStart=/usr/bin/mongod
     state: present
 
 - name: Test for RequiresMountsFor line
-  ansible.builtin.command: grep -c ^RequiresMountsFor= /lib/systemd/system/mongod.service
+  ansible.builtin.command: >-
+    grep -c ^RequiresMountsFor= /lib/systemd/system/mongod.service
   changed_when: false
   ignore_errors: true
   register: test_requiresmountsfor
@@ -79,8 +81,9 @@
   ansible.builtin.lineinfile:
     dest: /lib/systemd/system/mongod.service
     insertafter: ^After=
-    line: "RequiresMountsFor=/var/lib/mongodb \
-    /var/lib/mongodb/journal /var/log/mongodb"
+    line: >-
+      RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal
+      /var/log/mongodb
     state: present
   when: test_requiresmountsfor.rc != 0
 
@@ -90,7 +93,8 @@
 # be mentioned explicitly in the output of the command "systemctl
 # status mongod.service".
 - name: Test for AssertPathIsMountPoint lines
-  ansible.builtin.command: grep -c ^AssertPathIsMountPoint= /lib/systemd/system/mongod.service
+  ansible.builtin.command: >-
+    grep -c ^AssertPathIsMountPoint= /lib/systemd/system/mongod.service
   changed_when: false
   ignore_errors: true
   register: test_assertpathismountpoint
@@ -132,7 +136,8 @@
     state: present
   when: test_runtimedirectory.rc != 0
 - name: Test for RuntimeDirectoryMode line
-  ansible.builtin.command: grep -c ^RuntimeDirectoryMode= /lib/systemd/system/mongod.service
+  ansible.builtin.command: >-
+    grep -c ^RuntimeDirectoryMode= /lib/systemd/system/mongod.service
   changed_when: false
   ignore_errors: true
   register: test_runtimedirectorymode
