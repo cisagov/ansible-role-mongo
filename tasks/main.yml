@@ -41,6 +41,8 @@
     path: "{{ mongo_dropin_unit_file | dirname }}"
     state: directory
 
+# This drop-in contains our local overrides for the mongod systemd
+# service.
 - name: Create the drop-in unit file
   ansible.builtin.copy:
     dest: "{{ mongo_dropin_unit_file }}"
