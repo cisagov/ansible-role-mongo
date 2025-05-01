@@ -2,6 +2,7 @@
 
 # Standard Python Libraries
 import os
+import re
 
 # Third-Party Libraries
 import pytest
@@ -33,38 +34,36 @@ def test_pip3_packages(host, pkg):
 
 
 @pytest.mark.parametrize(
-    "file,content",
+    "prop,regex",
     [
+        ("After", r"^After=.*network\.target"),
+        ("After", r"^After=.*multi-user\.target"),
+        ("After", r"^After=.*cloud-final\.service"),
+        ("AssertPathIsMountPoint", r"^AssertPathIsMountPoint=/var/lib/mongodb$"),
         (
-            "/lib/systemd/system/mongod.service",
-            r"^After=network.target multi-user.target cloud-final.service$",
+            "AssertPathIsMountPoint",
+            r"^AssertPathIsMountPoint=/var/lib/mongodb/journal$",
         ),
+        ("AssertPathIsMountPoint", r"^AssertPathIsMountPoint=/var/log/mongodb$"),
         (
-            "/lib/systemd/system/mongod.service",
-            r"^ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod.conf$",
+            "ExecStart",
+            r"^ExecStart=.*argv\[\]=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod\.conf",
         ),
-        (
-            "/lib/systemd/system/mongod.service",
-            r"^RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb$",
-        ),
-        (
-            "/lib/systemd/system/mongod.service",
-            r"^AssertPathIsMountPoint=/var/lib/mongodb$",
-        ),
-        (
-            "/lib/systemd/system/mongod.service",
-            r"^AssertPathIsMountPoint=/var/log/mongodb$",
-        ),
-        ("/lib/systemd/system/mongod.service", r"^RuntimeDirectory=mongodb$"),
-        ("/lib/systemd/system/mongod.service", r"^RuntimeDirectoryMode=0744$"),
+        ("RequiresMountsFor", r"^RequiresMountsFor=.*/var/lib/mongodb"),
+        ("RequiresMountsFor", r"^RequiresMountsFor=.*/var/lib/mongodb/journal"),
+        ("RequiresMountsFor", r"^RequiresMountsFor=.*/var/log/mongodb"),
+        ("RuntimeDirectory", r"^RuntimeDirectory=mongodb$"),
+        ("RuntimeDirectoryMode", r"^RuntimeDirectoryMode=0744$"),
     ],
 )
-def test_files_content(host, file, content):
-    """Test that config files were modified as expected."""
-    f = host.file(file)
-
-    assert f.exists
-    assert f.contains(content)
+def test_unit_content(host, prop, regex):
+    """Test that unit parameters were modified via drop-ins as expected."""
+    cmd = f"systemctl show --no-pager --property={prop} mongod.service"
+    cmd_result = host.run(cmd)
+    assert cmd_result.rc == 0, "{cmd} command failed"
+    assert (
+        re.search(regex, cmd_result.stdout) is not None
+    ), f"Regex {regex} does not match any line in {cmd} output."
 
 
 @pytest.mark.parametrize("svc", ["mongod"])
