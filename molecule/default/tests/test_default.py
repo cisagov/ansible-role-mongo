@@ -33,6 +33,28 @@ def test_pip3_packages(host, pkg):
     assert pkg in host.pip.get_packages(pip_path="/usr/bin/pip3")
 
 
+def test_dropin_dir(host):
+    """Test that the mongod drop-in directory was created as expected."""
+    f = host.file("/etc/systemd/system/mongod.service.d")
+
+    assert f.exists
+    assert f.is_directory
+    assert f.user == "root"
+    assert f.group == "root"
+    assert f.mode == 0o755
+
+
+def test_dropin_file(host):
+    """Test that the mongod drop-in file was created as expected."""
+    f = host.file("/etc/systemd/system/mongod.service.d/mongod.conf")
+
+    assert f.exists
+    assert f.is_file
+    assert f.user == "root"
+    assert f.group == "root"
+    assert f.mode == 0o644
+
+
 @pytest.mark.parametrize(
     "prop,regex",
     [
