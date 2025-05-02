@@ -59,8 +59,8 @@ def test_pip3_packages(host, pkg):
         ("RuntimeDirectoryMode", r"^RuntimeDirectoryMode=0744$"),
     ],
 )
-def test_unit_content(host, prop, regex):
-    """Test that unit parameters were modified via drop-ins as expected."""
+def test_unit_properties(host, prop, regex):
+    """Test that unit properties were modified via drop-ins as expected."""
     cmd = f"systemctl show --no-pager --property={prop} mongod.service"
     cmd_result = host.run(cmd)
     assert cmd_result.rc == 0, "{cmd} command failed"
