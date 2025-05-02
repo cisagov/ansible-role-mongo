@@ -7,14 +7,12 @@
 # cloud-final.service here should ensure that cloud-init is finished
 # running before this service is started.
 After=network.target multi-user.target cloud-final.service
-# These three lines will disallow mongo from starting up in the event
-# that the mongo data, journal, and/or log volumes are not ready yet.
-# The mongo service will fail to start, and the failed assertion will
-# be mentioned explicitly in the output of the command "systemctl
-# status mongod.service".
-AssertPathIsMountPoint=/var/lib/mongodb
-AssertPathIsMountPoint=/var/lib/mongodb/journal
-AssertPathIsMountPoint=/var/log/mongodb
+# This line will disallow mongo from starting up in the event that the
+# mongo data, journal, and/or log volumes are not ready yet.  The
+# mongo service will fail to start, and the failed assertion will be
+# mentioned explicitly in the output of the command "systemctl status
+# mongod.service".
+AssertPathIsMountPoint=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb
 # Make sure all mongo file systems are mounted before starting.
 RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb
 
