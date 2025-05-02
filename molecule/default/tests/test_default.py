@@ -39,12 +39,15 @@ def test_pip3_packages(host, pkg):
         ("After", r"^After=.*network\.target"),
         ("After", r"^After=.*multi-user\.target"),
         ("After", r"^After=.*cloud-final\.service"),
-        ("AssertPathIsMountPoint", r"^AssertPathIsMountPoint=/var/lib/mongodb$"),
-        (
-            "AssertPathIsMountPoint",
-            r"^AssertPathIsMountPoint=/var/lib/mongodb/journal$",
-        ),
-        ("AssertPathIsMountPoint", r"^AssertPathIsMountPoint=/var/log/mongodb$"),
+        # TODO: The AssertPathIsMountPoint property does not appear in
+        # the output of systemctl show, so we can't test for the
+        # presence of these paths.  See #33 for more details.
+        # ("AssertPathIsMountPoint", r"^AssertPathIsMountPoint=.*/var/lib/mongodb"),
+        # (
+        #     "AssertPathIsMountPoint",
+        #     r"^AssertPathIsMountPoint=.*/var/lib/mongodb/journal",
+        # ),
+        # ("AssertPathIsMountPoint", r"^AssertPathIsMountPoint=.*/var/log/mongodb"),
         (
             "ExecStart",
             r"^ExecStart=.*argv\[\]=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod\.conf",
