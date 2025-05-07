@@ -1,0 +1,36 @@
+[Unit]
+# We want the mongo service to be started very late in the boot
+# process.  This is because cloud-init may have to format the mongo
+# data, journal, and/or logs volumes, and that can take some time.
+#
+# multi-user.target is pretty late in the boot process, and including
+# cloud-final.service here should ensure that cloud-init is finished
+# running before this service is started.
+After=network.target multi-user.target cloud-final.service
+# This line will disallow mongo from starting up in the event that the
+# mongo data, journal, and/or log volumes are not ready yet.  The
+# mongo service will fail to start, and the failed assertion will be
+# mentioned explicitly in the output of the command "systemctl status
+# mongod.service".
+AssertPathIsMountPoint=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb
+# Make sure all mongo file systems are mounted before starting.
+RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb
+
+[Service]
+# Mongo docs recommend running via numactl on NUMA hosts:
+# https://docs.mongodb.com/manual/administration/production-notes/#mongodb-and-numa-hardware
+#
+# Note that ExecStart has to be cleared out before adding the new
+# value.  This is described at the end of the "Example 2" section in
+# the systemd.unit man page:
+# https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html#Examples
+ExecStart=
+ExecStart=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod.conf
+# /run/mongodb (AKA /var/run/mongodb) is used to store a file
+# containing the mongod pid.  We shouldn't start up until that
+# directory exists and has the correct permissions.
+#
+# Make sure /run/mongodb is created before starting.
+RuntimeDirectory=mongodb
+# Make sure /run/mongodb has the correct permissions before starting.
+RuntimeDirectoryMode=0744
