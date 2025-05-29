@@ -7,10 +7,10 @@
 # cloud-final.service here should ensure that cloud-init is finished
 # running before this service is started.
 After=network.target multi-user.target cloud-final.service
-# The following lines will disallow mongo from starting up in the event
-# that the mongo data, journal, and/or log volumes are not ready yet.  The
-# mongo service will fail to start, and the failed assertion(s) will be
-# mentioned explicitly in the output of the command "systemctl status
+# The following lines will disallow the mongod service from starting up in
+# the event that the MongoDB data, journal, and/or log volumes are not ready
+# yet.  The mongod service will fail to start, and the failed assertion(s)
+# will be mentioned explicitly in the output of the command "systemctl status
 # mongod.service".
 # Note that these assertions cannot be combined into a single line.  Our
 # best interpretation of the systemd documentation is that
