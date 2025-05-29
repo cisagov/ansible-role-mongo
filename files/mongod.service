@@ -1,23 +1,30 @@
 [Unit]
-# We want the mongo service to be started very late in the boot
-# process.  This is because cloud-init may have to format the mongo
+# We want the mongod service to be started very late in the boot
+# process.  This is because cloud-init may have to format the MongoDB
 # data, journal, and/or logs volumes, and that can take some time.
 #
 # multi-user.target is pretty late in the boot process, and including
 # cloud-final.service here should ensure that cloud-init is finished
 # running before this service is started.
 After=network.target multi-user.target cloud-final.service
-# This line will disallow mongo from starting up in the event that the
-# mongo data, journal, and/or log volumes are not ready yet.  The
-# mongo service will fail to start, and the failed assertion will be
-# mentioned explicitly in the output of the command "systemctl status
+# The following lines will disallow the mongod service from starting up in
+# the event that the MongoDB data, journal, and/or log volumes are not ready
+# yet.  The mongod service will fail to start, and the failed assertion(s)
+# will be mentioned explicitly in the output of the command "systemctl status
 # mongod.service".
-AssertPathIsMountPoint=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb
-# Make sure all mongo file systems are mounted before starting.
+#
+# Note that these assertions cannot be combined into a single line.  Our
+# best interpretation of the systemd documentation is that
+# AssertPathIsMountPoint does not work if supplied with multiple paths,
+# as opposed to RequiresMountsFor, which does support multiple paths.
+AssertPathIsMountPoint=/var/lib/mongodb
+AssertPathIsMountPoint=/var/lib/mongodb/journal
+AssertPathIsMountPoint=/var/log/mongodb
+# Make sure all MongoDB file systems are mounted before starting.
 RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb
 
 [Service]
-# Mongo docs recommend running via numactl on NUMA hosts:
+# MongoDB docs recommend running via numactl on NUMA hosts:
 # https://docs.mongodb.com/manual/administration/production-notes/#mongodb-and-numa-hardware
 #
 # Note that ExecStart has to be cleared out before adding the new
