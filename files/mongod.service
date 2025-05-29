@@ -1,6 +1,6 @@
 [Unit]
-# We want the mongo service to be started very late in the boot
-# process.  This is because cloud-init may have to format the mongo
+# We want the mongod service to be started very late in the boot
+# process.  This is because cloud-init may have to format the MongoDB
 # data, journal, and/or logs volumes, and that can take some time.
 #
 # multi-user.target is pretty late in the boot process, and including
@@ -20,11 +20,11 @@ After=network.target multi-user.target cloud-final.service
 AssertPathIsMountPoint=/var/lib/mongodb
 AssertPathIsMountPoint=/var/lib/mongodb/journal
 AssertPathIsMountPoint=/var/log/mongodb
-# Make sure all mongo file systems are mounted before starting.
+# Make sure all MongoDB file systems are mounted before starting.
 RequiresMountsFor=/var/lib/mongodb /var/lib/mongodb/journal /var/log/mongodb
 
 [Service]
-# Mongo docs recommend running via numactl on NUMA hosts:
+# MongoDB docs recommend running via numactl on NUMA hosts:
 # https://docs.mongodb.com/manual/administration/production-notes/#mongodb-and-numa-hardware
 #
 # Note that ExecStart has to be cleared out before adding the new
