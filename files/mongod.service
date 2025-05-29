@@ -12,6 +12,7 @@ After=network.target multi-user.target cloud-final.service
 # yet.  The mongod service will fail to start, and the failed assertion(s)
 # will be mentioned explicitly in the output of the command "systemctl status
 # mongod.service".
+#
 # Note that these assertions cannot be combined into a single line.  Our
 # best interpretation of the systemd documentation is that
 # AssertPathIsMountPoint does not work if supplied with multiple paths,
