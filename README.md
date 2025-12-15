@@ -1,6 +1,7 @@
 # ansible-role-mongo #
 
 [![GitHub Build Status](https://github.com/cisagov/ansible-role-mongo/workflows/build/badge.svg)](https://github.com/cisagov/ansible-role-mongo/actions)
+[![License](https://img.shields.io/github/license/cisagov/ansible-role-mongo)](https://spdx.org/licenses/)
 [![CodeQL](https://github.com/cisagov/ansible-role-mongo/workflows/CodeQL/badge.svg)](https://github.com/cisagov/ansible-role-mongo/actions/workflows/codeql-analysis.yml)
 
 An Ansible role for installing [MongoDB](https://www.mongodb.com/).
