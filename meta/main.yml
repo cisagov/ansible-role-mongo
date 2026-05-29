@@ -63,5 +63,6 @@ galaxy_info:
     #   versions:
     #     - jammy
     #     - noble
+    #     - resolute
   role_name: mongo
   standalone: true
