@@ -72,7 +72,10 @@ def test_dropin_file(host):
         # ("AssertPathIsMountPoint", r"^AssertPathIsMountPoint=.*/var/log/mongodb"),
         (
             "ExecStart",
-            r"^ExecStart=.*argv\[\]=/usr/bin/numactl --interleave=all /usr/bin/mongod --config /etc/mongod\.conf",
+            (
+                r"^ExecStart=.*argv\[\]=/usr/bin/numactl --interleave=all "
+                r"/usr/bin/mongod --config /etc/mongod\.conf"
+            ),
         ),
         ("RequiresMountsFor", r"^RequiresMountsFor=.*/var/lib/mongodb"),
         ("RequiresMountsFor", r"^RequiresMountsFor=.*/var/lib/mongodb/journal"),
